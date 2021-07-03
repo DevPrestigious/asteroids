@@ -11,8 +11,6 @@
 #include "point.h"
 #include "velocity.h"
 #include "uiDraw.h"
-#include "rifle.h"
-
 
 class FlyingObject
 {
@@ -21,7 +19,7 @@ protected:
    Velocity velocity;
    bool alive;
    float angle;
-   int startY = random(-200,200);
+   //int startY = random(-200,200);
 public:
    
    
@@ -42,7 +40,7 @@ public:
    
    virtual void advance();
    virtual void draw() = 0;
-
+   /*
    //Function for other birds virtical velocity
    int velY(int startY)
    {
@@ -61,7 +59,8 @@ public:
        else
            return startY = random(-3, 1);
    }
-
+   */
+   
 };
 
 #endif

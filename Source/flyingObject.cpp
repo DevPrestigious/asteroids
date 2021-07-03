@@ -7,7 +7,6 @@
 #include "game.h"
 #include "flyingObject.h"
 //#include <corecrt_math_defines.h>
-#define BULLET_SPEED 10.0
 
 
 void FlyingObject::advance()

@@ -1,6 +1,6 @@
 //
 //  velocity.h
-//  myMoonLander
+//
 //
 //  Created by Scott Burton on 10/22/15.
 //  Copyright © 2015 Scott Burton. All rights reserved.

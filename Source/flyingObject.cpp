@@ -6,11 +6,12 @@
 //
 #include "game.h"
 #include "flyingObject.h"
+
 //#include <corecrt_math_defines.h>
 
 
 void FlyingObject::advance()
 {
-   point.addX(BULLET_SPEED * (-cos(M_PI / 180.0 * angle)));
-   point.addY(BULLET_SPEED * (sin(M_PI / 180.0 * angle)));
+   
 };
+

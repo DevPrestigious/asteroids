@@ -19,15 +19,17 @@ protected:
    Velocity velocity;
    bool alive;
    float angle;
+   int rotation;
+   
+   
    //int startY = random(-200,200);
 public:
-   
-   
    
    FlyingObject() { alive = true; }
    virtual ~FlyingObject() { }
 
    Point getPoint() const { return point; }
+   float getRotation() const { return rotation; }
    
    Velocity getVelocity() const { return velocity; }
 
@@ -39,27 +41,9 @@ public:
    void kill() { alive = false;}
    
    virtual void advance();
-   virtual void draw() = 0;
-   /*
-   //Function for other birds virtical velocity
-   int velY(int startY)
-   {
-      // If startY is not negative, then descend, otherwise rise
-       if (this->startY * -1 > 0)
-           return startY = random(0, 5);
-       else
-           return startY = random(-4, 1);
-   }
-   //Function for toughbirds vertical velocity
-   int tVelY(int startY)
-   {
-      // If startY is not negative, then ascend, otherwise descend
-       if (this->startY * -1 > 0)
-           return startY = random(0, 4);
-       else
-           return startY = random(-3, 1);
-   }
-   */
+   void draw();
+   void rotateLeft();
+   void rotateRight();
    
 };
 

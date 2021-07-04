@@ -63,7 +63,7 @@ float Game :: getClosestDistance(const FlyingObject &obj1, const FlyingObject &o
  *************************************************************/
 
 #include "game.h"
-#include "ship.h"
+#include "flyingObject.h"
 
 using namespace std;
 
@@ -74,7 +74,7 @@ using namespace std;
  * GAME CONSTRUCTOR
  ***************************************/
 Game :: Game(Point tl, Point br)
- : topLeft(tl), bottomRight(br)
+: topLeft(tl), bottomRight(br)
 {
    // Set up the initial conditions of the game
    // TODO: Set your bird pointer to a good initial value (e.g., NULL)
@@ -120,9 +120,9 @@ void Game :: advanceBullets()
          if (!isOnScreen(bullets[i].getPoint()))
          {
             // the bullet has left the screen
+            
             bullets[i].kill();
          }
-         
       }
    }
 }
@@ -237,7 +237,7 @@ void Game :: handleCollisions()
                //int points = bird->hit();
                //score += points;
                // the bullet is dead as well
-               bullets[i].kill();
+               //bullets[i].kill();
             }
          }
       } // if bullet is alive
@@ -252,7 +252,7 @@ void Game :: handleCollisions()
 
 void Game :: cleanUpZombies()
 {
-
+   
    // Look for dead bullets
    vector<Bullet>::iterator bulletIt = bullets.begin();
    while (bulletIt != bullets.end())
@@ -306,6 +306,7 @@ void Game :: handleInput(const Interface & ui)
    {
 
       Bullet newBullet;
+      
       newBullet.fire(ship.getPoint(), ship.getRotation());
       bullets.push_back(newBullet);
    }

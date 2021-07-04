@@ -79,8 +79,8 @@ private:
    // The coordinates of the screen
    Point topLeft;
    Point bottomRight;
-   
    Ship ship;
+  
    
    std::vector<Bullet> bullets;
    

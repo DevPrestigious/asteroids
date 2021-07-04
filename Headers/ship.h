@@ -6,28 +6,42 @@
 #define ROTATE_AMOUNT 6
 #define THRUST_AMOUNT 0.5
 
+
 #include "velocity.h"
 #include "point.h"
+#include "uiDraw.h"
 
+#include "flyingObject.h"
 // Put your Ship class here
-class Ship
+
+class Ship : public FlyingObject
 {
+
 private:
-   Point point;
-   Velocity velocity;
-   bool alive;
+
    bool thrust;
-   int rotation;
    
    
 public:
-   Ship() : point(0, 0), alive(true), rotation(180), thrust(false){}
+   
+
+   Ship()
+   {
+      Point(0,0);
+      isAlive();
+      thrust = false;
+      rotation = 0;
+   }
    
    Point getPoint() const { return point; }
    Velocity getVelocity() const { return velocity; }
-   float getRotation() const { return rotation; }
    
-   bool isAlive() const { return alive; }
+   
+   bool isAlive()
+   {
+      return FlyingObject::isAlive();
+   };
+   
    bool isThrust() const { return thrust; }
    
    void setAlive(bool alive) { this->alive = alive; }
@@ -35,8 +49,7 @@ public:
    void applyThrustUp();
    
    
-   void rotateLeft();
-   void rotateRight();
+   
    int posRotation();
 
    void advance();

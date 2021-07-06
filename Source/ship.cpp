@@ -1,33 +1,17 @@
 #include "ship.h"
+#include "uiInteract.h"
 // Put your ship methods here
 
 void Ship :: applyThrustUp()
 {
-   velocity.setDy(velocity.getDy() - (THRUST_AMOUNT * (-cos(M_PI / 180.0 * rotation))));
-   velocity.setDx(velocity.getDx() - (THRUST_AMOUNT * (sin(M_PI / 180.0 * rotation))));
+   FlyingObject::advance();
 }
 
 
 void Ship :: advance()
 {
-   
-   if (point.getX() >= 200)
-   {
-      point.setX(-200);
-   }
-   else if (point.getX() <= -200)
-   {
-      point.setX(200);
-   }
-   else if (point.getY() >= 200)
-   {
-      point.setY(-200);
-   }
-   else if (point.getY() <= -200)
-   {
-      point.setY(200);
-   }
-    
+   // Lets ship "scroll" on the screen
+   handleBounds();
    velocity.advancePoint(point);
 }
 

@@ -36,7 +36,6 @@
 #include "ship.h"
 #include <vector>
 
-
 #define CLOSE_ENOUGH 15
 
 /*****************************************
@@ -73,15 +72,12 @@ public:
     *********************************************/
    void draw(const Interface & ui);
    
-
-
 private:
    // The coordinates of the screen
    Point topLeft;
    Point bottomRight;
    Ship ship;
   
-   
    std::vector<Bullet> bullets;
    
    // TODO: declare your vector of rocks here.
@@ -94,14 +90,10 @@ private:
    void advanceBullets();
    void advanceShip();
    
-   
    void handleCollisions();
    void cleanUpZombies();
    
 };
-
-
-
 
 
 #endif /* GAME_H */

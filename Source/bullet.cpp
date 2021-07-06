@@ -10,20 +10,33 @@
 
 void Bullet::advance()
 {
-   point.addX(BULLET_SPEED * (-cos(M_PI / 180.0 * (rotation - 90))));
-   point.addY(BULLET_SPEED * (sin(M_PI / 180.0 * (rotation + 90))));
+   // Counts +1 eachtime advanced is called
+   frameCount++;
+   // Once the object flies for 40 counts then it is killed.
+   if (frameCount >= 40)
+   {
+      kill();
+   }
+   // Gives the bullet velocity, by giving it bullet speed, and adding ships velocity
+   point.addX(bulletVelocity.getDx() + BULLET_SPEED * (-cos(M_PI / 180.0 * (rotation - 90))));
+   point.addY(bulletVelocity.getDy() + BULLET_SPEED * (sin(M_PI / 180.0 * (rotation + 90))));
+   
+   // Called from flyingObject
+   handleBounds();
 }
 
 void Bullet::draw()
 {
    drawDot(Bullet::getPoint());
+   
 }
 
-void Bullet::fire(Point point, int rotation)
+void Bullet::fire(Point point, int rotation, Velocity shipVelocity)
 {
    
-   std::cout << "Bullet: " << rotation << std::endl;
+   //std::cout << "Bullet: " << point << std::endl;
    
    this->rotation = rotation;
    this->point = point;
+   this->bulletVelocity = shipVelocity;
 };

@@ -11,12 +11,16 @@
 #include "point.h"
 #include "velocity.h"
 #include "uiDraw.h"
+#include "uiInteract.h"
+
 
 class FlyingObject
 {
 protected:
+   
    Point point;
    Velocity velocity;
+
    bool alive;
    float angle;
    int rotation;
@@ -39,6 +43,7 @@ public:
    void setPoint(const Point & point) { this->point = point; }
    void setVelocity(const Velocity & velocity) { this->velocity = velocity ;}
    void kill() { alive = false;}
+   void handleBounds();
    
    virtual void advance();
    void draw();

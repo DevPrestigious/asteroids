@@ -129,7 +129,7 @@ void Game :: advanceBullets()
 
 
 /**************************************************************************
- * GAME :: ADVANCE BIRD
+ * GAME :: ADVANCE SHIP
  *
  * 1. If there is no bird, create one with some probability
  * 2. If there is a bird, and it's alive, advance it
@@ -296,18 +296,24 @@ void Game :: handleInput(const Interface & ui)
       ship.rotateRight();
    }
    
+   // Moves the ship and turns on the ships flames
    if (ui.isUp())
    {
       ship.applyThrustUp();
+      ship.setThrust(true);
+   }
+   // Sets the ships thrusterflames off if not being used
+   if (!ui.isUp())
+   {
+      ship.setThrust(false);
    }
    
    // Check for "Spacebar
    if (ui.isSpace())
    {
-
       Bullet newBullet;
       
-      newBullet.fire(ship.getPoint(), ship.getRotation());
+      newBullet.fire(ship.getPoint(), ship.getRotation(), ship.getVelocity());
       bullets.push_back(newBullet);
    }
    }
@@ -332,6 +338,8 @@ void Game :: draw(const Interface & ui)
   */
 
    // draw the ship
+   
+   
    ship.draw();
    // draw the bullets, if they are alive
    for (int i = 0; i < bullets.size(); i++)

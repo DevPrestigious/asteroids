@@ -35,13 +35,14 @@ public:
    
    Point getPoint() const { return point; }
    Velocity getVelocity() const { return velocity; }
-   
+   Point getPointX() { return point.getX(); }
    
    bool isAlive()
    {
       return FlyingObject::isAlive();
    };
    
+   void setThrust(bool thrust) {this->thrust = thrust; }
    bool isThrust() const { return thrust; }
    
    void setAlive(bool alive) { this->alive = alive; }

@@ -12,7 +12,6 @@
 #include <algorithm>
 using namespace std;
 
-
 // You may find this function helpful...
 
 /**********************************************************
@@ -97,6 +96,7 @@ Game :: ~Game()
 void Game :: advance()
 {
    advanceBullets();
+   advanceRocks();
    advanceShip();
 
    handleCollisions();
@@ -116,17 +116,32 @@ void Game :: advanceBullets()
       {
          // this bullet is alive, so tell it to move forward
          bullets[i].advance();
-         
-         if (!isOnScreen(bullets[i].getPoint()))
-         {
-            // the bullet has left the screen
-            
-            bullets[i].kill();
-         }
+         std::cout << "Bullet incriment: " << i << " " << std:: endl;
+         // pushes the bullet to the other side of the screen
+         bullets[i].handleBounds();
       }
    }
 }
 
+/***************************************
+ * GAME :: ADVANCE ROCKS
+ * Go through each bullet and advance it.
+ ***************************************/
+void Game :: advanceRocks()
+{
+   // Move each of the rocks forward if it is alive
+   for (int i = 0; i < bigRocks.size(); i++)
+   {
+      if (bigRocks[0].isAlive())
+      {
+         // this rock is alive, so tell it to move forward
+         bigRocks[0].advance();
+         std::cout << "i Incriment: " << i << std::endl;
+         // pushes the rock to the other side of the screen
+         bigRocks[0].handleBounds();
+      }
+   }
+}
 
 /**************************************************************************
  * GAME :: ADVANCE SHIP
@@ -139,20 +154,14 @@ void Game :: advanceShip()
 {
    {
       // we have a ship, make sure it's alive
-      //if (ship.isAlive())
+      if (ship.isAlive())
       {
-         ship.advance();
          // move it forward
-         //bird->advance();
-         // check if the bird has gone off the screen
-         //if (!isOnScreen(bird->getPoint()))
-         {
-            // We have missed the bird
-           // bird->kill();
-         }
+         ship.advance();
+         // Lets ship "scroll" on the screen
+         ship.handleBounds();
       }
    }
-   
 }
 
 /**************************************************************************
@@ -198,17 +207,6 @@ Bird* Game :: createBird()
    return 0;
 }
 */
-/**************************************************************************
- * GAME :: IS ON SCREEN
- * Determines if a given point is on the screen.
- **************************************************************************/
-bool Game :: isOnScreen(const Point & point)
-{
-   return (point.getX() >= topLeft.getX() - OFF_SCREEN_BORDER_AMOUNT
-      && point.getX() <= bottomRight.getX() + OFF_SCREEN_BORDER_AMOUNT
-      && point.getY() >= bottomRight.getY() - OFF_SCREEN_BORDER_AMOUNT
-      && point.getY() <= topLeft.getY() + OFF_SCREEN_BORDER_AMOUNT);
-}
 
 /**************************************************************************
  * GAME :: HANDLE COLLISIONS
@@ -266,7 +264,6 @@ void Game :: cleanUpZombies()
       {
          // If we had a list of pointers, we would need to delete the memory here...
          
-         
          // remove from list and advance
          bulletIt = bullets.erase(bulletIt);
       }
@@ -275,7 +272,6 @@ void Game :: cleanUpZombies()
          bulletIt++; // advance
       }
    }
-   
 }
 
 /***************************************
@@ -287,10 +283,14 @@ void Game :: handleInput(const Interface & ui)
    // Change the direction of the rifle
    if (ship.isAlive())
    {
+      
+   // Rotate ship left
    if (ui.isLeft())
    {
       ship.rotateLeft();
    }
+      
+   // Rotates ship right
    if (ui.isRight())
    {
       ship.rotateRight();
@@ -302,7 +302,8 @@ void Game :: handleInput(const Interface & ui)
       ship.applyThrustUp();
       ship.setThrust(true);
    }
-   // Sets the ships thrusterflames off if not being used
+      
+   // Sets the ships thruster flames off if not being used
    if (!ui.isUp())
    {
       ship.setThrust(false);
@@ -312,7 +313,6 @@ void Game :: handleInput(const Interface & ui)
    if (ui.isSpace())
    {
       Bullet newBullet;
-      
       newBullet.fire(ship.getPoint(), ship.getRotation(), ship.getVelocity());
       bullets.push_back(newBullet);
    }
@@ -325,22 +325,16 @@ void Game :: handleInput(const Interface & ui)
  *********************************************/
 void Game :: draw(const Interface & ui)
 {
-   /*
-   // draw the bird
-   // TODO: Check if you have a valid bird and if it's alive
-   // then call it's draw method
-   if (bird != NULL && bird->isAlive())
-   {
-  
-      bird->draw();
    
-   };
-  */
-
+   for (int i = 0; i < 1; i++) {
+      BigRock newBigRock;
+      bigRocks.push_back(newBigRock);
+      bigRocks[i].draw();
+   }
+   
    // draw the ship
-   
-   
    ship.draw();
+   
    // draw the bullets, if they are alive
    for (int i = 0; i < bullets.size(); i++)
    {
@@ -394,8 +388,6 @@ void Game :: draw(const Interface & ui)
    drawText(textHighScore,"High Score:");
    */
 
-
-   
 }
 
 

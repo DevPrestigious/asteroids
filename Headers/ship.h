@@ -16,15 +16,11 @@
 
 class Ship : public FlyingObject
 {
-
+   
 private:
-
    bool thrust;
    
-   
 public:
-   
-
    Ship()
    {
       Point(0,0);
@@ -48,8 +44,6 @@ public:
    void setAlive(bool alive) { this->alive = alive; }
    
    void applyThrustUp();
-   
-   
    
    int posRotation();
 

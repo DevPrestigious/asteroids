@@ -82,12 +82,16 @@ private:
    
    // TODO: declare your vector of rocks here.
    //Rocks * rock;
-
+   std::vector<BigRock> bigRocks;
+   std::vector<MediumRock> mediumRocks;
+   std::vector<SmallRock> smallRocks;
    /*************************************************
     * Private methods to help with the game logic.
     *************************************************/
    bool isOnScreen(const Point & point);
+   
    void advanceBullets();
+   void advanceRocks();
    void advanceShip();
    
    void handleCollisions();

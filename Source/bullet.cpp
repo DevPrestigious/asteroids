@@ -21,21 +21,18 @@ void Bullet::advance()
    point.addX(bulletVelocity.getDx() + BULLET_SPEED * (-cos(M_PI / 180.0 * (rotation - 90))));
    point.addY(bulletVelocity.getDy() + BULLET_SPEED * (sin(M_PI / 180.0 * (rotation + 90))));
    
-   // Called from flyingObject
-   handleBounds();
 }
 
 void Bullet::draw()
 {
    drawDot(Bullet::getPoint());
-   
 }
 
 void Bullet::fire(Point point, int rotation, Velocity shipVelocity)
 {
-   
-   //std::cout << "Bullet: " << point << std::endl;
-   
+   // Sets passed variables from ship to the bullet object
+   // Assists in knowing what direction to shoot bullet, where to shoot bullet from
+   // and what velocity.
    this->rotation = rotation;
    this->point = point;
    this->bulletVelocity = shipVelocity;

@@ -10,10 +10,8 @@ void BigRock::draw()
 
 void BigRock::advance()
 {
-   velocity.setDy(.0001);
-   velocity.setDx(.0001);
-   velocity.advancePoint(point);
-   std::cout << point << std::endl;
+   point.addX(6 * (-cos(M_PI / 180.0 * (randomNum))));
+   point.addY(6 * (sin(M_PI / 180.0 * (randomNum))));
 }
 
 void MediumRock::draw()

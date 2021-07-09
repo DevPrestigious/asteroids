@@ -21,7 +21,7 @@
 class Rock : public FlyingObject
 {
 protected:
-   
+   int randomNum = random(-20000,20000);
 public:
    void draw();
    /*

@@ -109,6 +109,7 @@ void Game :: advance()
  ***************************************/
 void Game :: advanceBullets()
 {
+   
    // Move each of the bullets forward if it is alive
    for (int i = 0; i < bullets.size(); i++)
    {
@@ -116,9 +117,10 @@ void Game :: advanceBullets()
       {
          // this bullet is alive, so tell it to move forward
          bullets[i].advance();
-         std::cout << "Bullet incriment: " << i << " " << std:: endl;
+         
          // pushes the bullet to the other side of the screen
          bullets[i].handleBounds();
+         
       }
    }
 }
@@ -132,13 +134,12 @@ void Game :: advanceRocks()
    // Move each of the rocks forward if it is alive
    for (int i = 0; i < bigRocks.size(); i++)
    {
-      if (bigRocks[0].isAlive())
+      if (bigRocks[i].isAlive())
       {
          // this rock is alive, so tell it to move forward
-         bigRocks[0].advance();
-         std::cout << "i Incriment: " << i << std::endl;
+         bigRocks[i].advance();
          // pushes the rock to the other side of the screen
-         bigRocks[0].handleBounds();
+         bigRocks[i].handleBounds();
       }
    }
 }

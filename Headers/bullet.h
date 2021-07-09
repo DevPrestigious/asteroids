@@ -12,7 +12,7 @@ class Bullet : public FlyingObject
 {
 protected:
    Velocity bulletVelocity;
-   int frameCount;
+   int frameCount = 0;
 public:
   // Bullet()
   // {
@@ -27,7 +27,6 @@ public:
    void fire(Point point, int rotation, Velocity shipVelocity);
 
    void advance();
-   
    
 };
 

@@ -18,8 +18,8 @@ void Bullet::advance()
       kill();
    }
    // Gives the bullet velocity, by giving it bullet speed, and adding ships velocity
-   point.addX(bulletVelocity.getDx() + BULLET_SPEED * (-cos(M_PI / 180.0 * (rotation - 90))));
-   point.addY(bulletVelocity.getDy() + BULLET_SPEED * (sin(M_PI / 180.0 * (rotation + 90))));
+   point.addX(bulletVelocity.getDx() + BULLET_SPEED * (-cos(M_PI / 180.0 * ((rotation) - 90))));
+   point.addY(bulletVelocity.getDy() + BULLET_SPEED * (sin(M_PI / 180.0 * ((rotation) + 90))));
    
 }
 

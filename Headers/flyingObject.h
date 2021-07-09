@@ -12,10 +12,12 @@
 #include "velocity.h"
 #include "uiDraw.h"
 #include "uiInteract.h"
+#include "corecrt_math_defines.h"
 
 
 class FlyingObject
 {
+
 protected:
    
    Point point;
@@ -24,9 +26,7 @@ protected:
    bool alive;
    float angle;
    int rotation;
-   
-   
-   //int startY = random(-200,200);
+
 public:
    
    FlyingObject() { alive = true; }

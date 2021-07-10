@@ -134,6 +134,7 @@ void Game :: advanceRocks()
    // Move each of the rocks forward if it is alive
    for (int i = 0; i < bigRocks.size(); i++)
    {
+      (*pRocks[i])->advance();
       if (bigRocks[i].isAlive())
       {
          // this rock is alive, so tell it to move forward
@@ -254,13 +255,14 @@ void Game :: cleanUpZombies()
    
    // Look for dead bullets
    vector<Bullet>::iterator bulletIt = bullets.begin();
+   //vector<Rock>::iterator rockIt = pRocks->begin();
    while (bulletIt != bullets.end())
    {
       Bullet bullet = *bulletIt;
       // Asteroids Hint:
       // If we had a list of pointers, we would need this line instead:
       //Bullet* pBullet = *bulletIt;
-      
+      //Rock* pRock = *rockIt;
       if (!bullet.isAlive())
       {
          // If we had a list of pointers, we would need to delete the memory here...

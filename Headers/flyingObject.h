@@ -12,7 +12,7 @@
 #include "velocity.h"
 #include "uiDraw.h"
 #include "uiInteract.h"
-#include "corecrt_math_defines.h"
+//#include "corecrt_math_defines.h"
 
 
 class FlyingObject

@@ -39,6 +39,7 @@ int main(int argc, char ** argv)
    
    Interface ui(argc, argv, "Asteroids", topLeft, bottomRight);
    Game game(topLeft, bottomRight);
+   
    ui.run(callBack, &game);
    
    return 0;

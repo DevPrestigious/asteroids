@@ -21,10 +21,12 @@
 class Rock : public FlyingObject
 {
 protected:
-   int randomNum = random(-20000,20000);
+   int randomNum = random(-200,200);
 public:
-   void draw();
+   
+   //virtual void draw(){};
    /*
+    This might be helpful to get the rocks to update when they crash.
    void positionUpdater(Point point, int rotation, Velocity shipVelocity)
    {
       // Sets passed variables from ship to the bullet object
@@ -40,11 +42,16 @@ public:
 class BigRock : public Rock
 {
 protected:
-   int rotate;
+   
 public:
+   BigRock()
+   {
+      point = Point(randomNum,randomNum);
+      alive = true;
+   }
    void draw();
    void advance();
-   
+   void kill();
 };
 
 class MediumRock : public Rock
@@ -52,7 +59,13 @@ class MediumRock : public Rock
 protected:
    
 public:
+   MediumRock()
+   {
+      point = Point(randomNum,randomNum);
+      alive = true;
+   }
    void draw();
+   void advance();
    
 };
 

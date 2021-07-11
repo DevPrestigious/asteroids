@@ -14,7 +14,6 @@ void Ship :: applyThrustUp()
 void Ship :: advance()
 {
    velocity.advancePoint(point);
-   
 }
 
 void Ship::draw() const

@@ -77,7 +77,12 @@ Game :: Game(Point tl, Point br)
 {
    // Set up the initial conditions of the game
    // TODO: Set your bird pointer to a good initial value (e.g., NULL)
-   //bird = NULL;
+   //bird = NULL
+   
+   for (int i = 0; i < 4; i++)
+   {
+      pRocks.push_back(new BigRock);
+   }
 }
 
 /****************************************
@@ -120,7 +125,6 @@ void Game :: advanceBullets()
          
          // pushes the bullet to the other side of the screen
          bullets[i].handleBounds();
-         
       }
    }
 }
@@ -132,15 +136,14 @@ void Game :: advanceBullets()
 void Game :: advanceRocks()
 {
    // Move each of the rocks forward if it is alive
-   for (int i = 0; i < bigRocks.size(); i++)
+   for (int i = 0; i < pRocks.size(); i++)
    {
-      (*pRocks[i])->advance();
-      if (bigRocks[i].isAlive())
+      if (pRocks[i]->isAlive())
       {
          // this rock is alive, so tell it to move forward
-         bigRocks[i].advance();
+         pRocks[i]->advance();
          // pushes the rock to the other side of the screen
-         bigRocks[i].handleBounds();
+         pRocks[i]->handleBounds();
       }
    }
 }
@@ -329,14 +332,15 @@ void Game :: handleInput(const Interface & ui)
 void Game :: draw(const Interface & ui)
 {
    
-   for (int i = 0; i < 1; i++) {
-      BigRock newBigRock;
-      bigRocks.push_back(newBigRock);
-      bigRocks[i].draw();
-   }
    
    // draw the ship
    ship.draw();
+   
+   for (int i = 0; i < pRocks.size(); i++)
+   {
+      pRocks[i]->draw();
+   }
+   
    
    // draw the bullets, if they are alive
    for (int i = 0; i < bullets.size(); i++)

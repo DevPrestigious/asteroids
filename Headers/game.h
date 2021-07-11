@@ -72,24 +72,21 @@ public:
     *********************************************/
    void draw(const Interface & ui);
    
-private:
+   
+protected:
    // The coordinates of the screen
    Point topLeft;
    Point bottomRight;
    Ship ship;
-  
+   
    std::vector<Bullet> bullets;
    
    // TODO: declare your vector of rocks here.
-   //Rocks * rock;
-   std::vector<BigRock> bigRocks;
-   std::vector<MediumRock> mediumRocks;
-   std::vector<SmallRock> smallRocks;
    
-   std::vector<Rock>* pRocks;
+   std::vector<Rock*> pRocks;
 
    // I may be able to use this line, to instead point to new BigRock, MediumRock & SmallRock
-   //std::vector<int>* te = new vector<int>();
+
    /*************************************************
     * Private methods to help with the game logic.
     *************************************************/

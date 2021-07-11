@@ -46,7 +46,7 @@ public:
    void handleBounds();
    
    virtual void advance();
-   void draw();
+   virtual void draw(){};
    void rotateLeft();
    void rotateRight();
    

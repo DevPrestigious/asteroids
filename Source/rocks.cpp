@@ -5,7 +5,7 @@
 void BigRock::draw()
 {
    drawLargeAsteroid(Rock::getPoint(), rotation);
-   rotation += 1;
+   rotation += BIG_ROCK_SPIN;
 }
 
 void BigRock::advance()
@@ -14,10 +14,16 @@ void BigRock::advance()
    point.addY(1 * (sin(M_PI / 180.0 * (randomNum))));
 }
 
+void BigRock::breakApart(std::vector<Rock*>& pRocks)
+{
+   pRocks.push_back(new MediumRock());
+   pRocks.push_back(new MediumRock());
+}
+
 void MediumRock::draw()
 {
    drawMediumAsteroid(Rock::getPoint(), rotation);
-   rotation += 5;
+   rotation += MEDIUM_ROCK_SPIN;
 }
 
 void MediumRock::advance()
@@ -26,8 +32,21 @@ void MediumRock::advance()
    point.addY(1 * (sin(M_PI / 180.0 * (randomNum))));
 }
 
+void MediumRock::breakApart(std::vector<Rock*>& pRocks)
+{
+   pRocks.push_back(new SmallRock());
+   pRocks.push_back(new SmallRock());
+}
 
 void SmallRock::draw()
 {
-   drawSmallAsteroid(Point(0,0), 10);
+   drawSmallAsteroid(Rock::getPoint(), rotation);
+   rotation += SMALL_ROCK_SPIN;
 }
+
+void SmallRock::advance()
+{
+   point.addX(1 * (-cos(M_PI / 180.0 * (randomNum))));
+   point.addY(1 * (sin(M_PI / 180.0 * (randomNum))));
+}
+

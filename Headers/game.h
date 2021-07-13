@@ -36,7 +36,6 @@
 #include "ship.h"
 #include <vector>
 
-#define CLOSE_ENOUGH 15
 
 /*****************************************
  * GAME
@@ -71,6 +70,8 @@ public:
     * Description: draws everything for the game.
     *********************************************/
    void draw(const Interface & ui);
+
+   float getClosestDistance(const FlyingObject& obj1, const FlyingObject& obj2) const; 
    
    
 protected:
@@ -80,12 +81,8 @@ protected:
    Ship ship;
    
    std::vector<Bullet> bullets;
-   
-   // TODO: declare your vector of rocks here.
-   
+     
    std::vector<Rock*> pRocks;
-
-   // I may be able to use this line, to instead point to new BigRock, MediumRock & SmallRock
 
    /*************************************************
     * Private methods to help with the game logic.

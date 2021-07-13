@@ -11,7 +11,6 @@
 
 #include "flyingObject.h"
 
-
 // Define the following classes here:
 //   Rock
 //   BigRock
@@ -22,21 +21,14 @@ class Rock : public FlyingObject
 {
 protected:
    int randomNum = random(-200,200);
+   float collisionSize = 0;
+   int rockTypeCount = 0;
+
 public:
-   
-   //virtual void draw(){};
-   /*
-    This might be helpful to get the rocks to update when they crash.
-   void positionUpdater(Point point, int rotation, Velocity shipVelocity)
-   {
-      // Sets passed variables from ship to the bullet object
-      // Assists in knowing what direction to shoot bullet, where to shoot bullet from
-      // and what velocity.
-      this->rotation = rotation;
-      this->point = point;
-      this->bulletVelocity = shipVelocity;
-   };
-    */
+   bool isAlive() { return alive; }
+   float getCollisionSize() { return collisionSize; }
+   virtual void breakApart(std::vector<Rock*>& pRocks) {};
+
 };
 
 class BigRock : public Rock
@@ -48,10 +40,12 @@ public:
    {
       point = Point(randomNum,randomNum);
       alive = true;
+      collisionSize = BIG_ROCK_SIZE;
    }
    void draw();
    void advance();
-   void kill();
+   void breakApart(std::vector<Rock*>& pRocks);
+   float getCollisionSize() { return collisionSize; }
 };
 
 class MediumRock : public Rock
@@ -61,12 +55,15 @@ protected:
 public:
    MediumRock()
    {
-      point = Point(randomNum,randomNum);
+      point = Point(randomNum, randomNum);
       alive = true;
+      collisionSize = MEDIUM_ROCK_SIZE;
    }
    void draw();
    void advance();
-   
+   void breakApart(std::vector<Rock*>& pRocks);
+   float getCollisionSize() { return collisionSize; }
+
 };
 
 class SmallRock : public Rock
@@ -74,7 +71,17 @@ class SmallRock : public Rock
 protected:
    
 public:
+   SmallRock()
+   {
+      point = Point(randomNum, randomNum);
+      alive = true;
+      collisionSize = SMALL_ROCK_SIZE;
+   }
+   
    void draw();
+   void advance();
+  
+   float getCollisionSize() { return collisionSize; }
    
 };
 

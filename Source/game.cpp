@@ -14,41 +14,6 @@ using namespace std;
 
 // You may find this function helpful...
 
-/**********************************************************
- * Function: getClosestDistance
- * Description: Determine how close these two objects will
- *   get in between the frames.
- **********************************************************/
-/*
-float Game :: getClosestDistance(const FlyingObject &obj1, const FlyingObject &obj2) const
-{
-   // find the maximum distance traveled
-   float dMax = max(abs(obj1.getVelocity().getDx()), abs(obj1.getVelocity().getDy()));
-   dMax = max(dMax, abs(obj2.getVelocity().getDx()));
-   dMax = max(dMax, abs(obj2.getVelocity().getDy()));
-   dMax = max(dMax, 0.1f); // when dx and dy are 0.0. Go through the loop once.
-   
-   float distMin = std::numeric_limits<float>::max();
-   for (float i = 0.0; i <= dMax; i++)
-   {
-      Point point1(obj1.getPoint().getX() + (obj1.getVelocity().getDx() * i / dMax),
-                     obj1.getPoint().getY() + (obj1.getVelocity().getDy() * i / dMax));
-      Point point2(obj2.getPoint().getX() + (obj2.getVelocity().getDx() * i / dMax),
-                     obj2.getPoint().getY() + (obj2.getVelocity().getDy() * i / dMax));
-      
-      float xDiff = point1.getX() - point2.getX();
-      float yDiff = point1.getY() - point2.getY();
-      
-      float distSquared = (xDiff * xDiff) +(yDiff * yDiff);
-      
-      distMin = min(distMin, distSquared);
-   }
-   
-   return sqrt(distMin);
-}
-*/
-
-
 /*************************************************************
  * File: game.cpp
  * Author: Alexander Dohms
@@ -78,10 +43,9 @@ Game :: Game(Point tl, Point br)
    // Set up the initial conditions of the game
    // TODO: Set your bird pointer to a good initial value (e.g., NULL)
    //bird = NULL
-   
    for (int i = 0; i < 4; i++)
    {
-      pRocks.push_back(new BigRock);
+      pRocks.push_back(new BigRock());
    }
 }
 
@@ -169,49 +133,39 @@ void Game :: advanceShip()
    }
 }
 
-/**************************************************************************
- * GAME :: CREATE BIRD
- * Create a bird of a random type according to the rules of the game.
- **************************************************************************/
-/*
-Bird* Game :: createBird()
+
+/**********************************************************
+ * Function: getClosestDistance
+ * Description: Determine how close these two objects will
+ *   get in between the frames.
+ **********************************************************/
+
+float Game::getClosestDistance(const FlyingObject& obj1, const FlyingObject& obj2) const
 {
-   Create bird is special here because it will only create a
-   total of 10 Tough or Angry birds, making the highscore more
-   challenging, and also to make the game not feel like an endless
-   loop
-   // TODO: Fill this in
-   
-   int randomNum = random(1, 4);
-   Bird* newBird = NULL;
-   switch (randomNum)
+   // find the maximum distance traveled
+   float dMax = max(abs(obj1.getVelocity().getDx()), abs(obj1.getVelocity().getDy()));
+   dMax = max(dMax, abs(obj2.getVelocity().getDx()));
+   dMax = max(dMax, abs(obj2.getVelocity().getDy()));
+   dMax = max(dMax, 0.1f); // when dx and dy are 0.0. Go through the loop once.
+
+   float distMin = std::numeric_limits<float>::max();
+   for (float i = 0.0; i <= dMax; i++)
    {
-      case 1:
-         newBird = new Bird();
-         if (birdAmount < 1) {
-            return 0;
-         }
-         --birdAmount;
-         return newBird;
-      case 2:
-         newBird = new ToughBird();
-         if (birdAmount < 1) {
-            return 0;
-         }
-         --birdAmount;
-         return newBird;
-      case 3:
-         newBird = new SacredBird();
-         if (birdAmount < 1) {
-            return 0;
-         }
-         //Sacred bird does not affect birdAmount
-         return newBird;
-      
+      Point point1(obj1.getPoint().getX() + (obj1.getVelocity().getDx() * i / dMax),
+         obj1.getPoint().getY() + (obj1.getVelocity().getDy() * i / dMax));
+      Point point2(obj2.getPoint().getX() + (obj2.getVelocity().getDx() * i / dMax),
+         obj2.getPoint().getY() + (obj2.getVelocity().getDy() * i / dMax));
+
+      float xDiff = point1.getX() - point2.getX();
+      float yDiff = point1.getY() - point2.getY();
+
+      float distSquared = (xDiff * xDiff) + (yDiff * yDiff);
+
+      distMin = min(distMin, distSquared);
    }
-   return 0;
+
+   return sqrt(distMin);
 }
-*/
 
 /**************************************************************************
  * GAME :: HANDLE COLLISIONS
@@ -226,25 +180,23 @@ void Game :: handleCollisions()
       {
          // this bullet is alive, see if its too close
 
-         // check if the rock is at this point (in case it was hit)
-         //if (bird != NULL && bird->isAlive())
+         //check if the rock is at this point (in case it was hit)
+         for (int j = 0; j < pRocks.size(); j++)
          {
-            // BTW, this logic could be more , but this will
-            // get the job done for now...
-            //if (fabs(bullets[i].getPoint().getX() - bird->getPoint().getX()) < CLOSE_ENOUGH
-            //   && fabs(bullets[i].getPoint().getY() - bird->getPoint().getY()) < CLOSE_ENOUGH)
+            if (pRocks[j]->isAlive())
             {
-               //we have a hit!
-               
-               // hit the bird
-               //int points = bird->hit();
-               //score += points;
-               // the bullet is dead as well
-               //bullets[i].kill();
+               if (getClosestDistance(bullets[i], *pRocks[j]) <= pRocks[j]->getCollisionSize())
+               {
+                  pRocks[j]->breakApart(pRocks);
+
+                  pRocks[j]->kill();
+                  
+                  bullets[i].kill();
+                  
+               }
             }
          }
       } // if bullet is alive
-      
    } // for bullets
 }
 
@@ -255,28 +207,31 @@ void Game :: handleCollisions()
 
 void Game :: cleanUpZombies()
 {
-   
-   // Look for dead bullets
+   // Look for dead bullets and dead rocks.
    vector<Bullet>::iterator bulletIt = bullets.begin();
-   //vector<Rock>::iterator rockIt = pRocks->begin();
-   while (bulletIt != bullets.end())
+   vector<Rock*>::iterator rockIt = pRocks.begin();
+   while ((bulletIt != bullets.end()) && (rockIt != pRocks.end()))
    {
       Bullet bullet = *bulletIt;
       // Asteroids Hint:
       // If we had a list of pointers, we would need this line instead:
       //Bullet* pBullet = *bulletIt;
-      //Rock* pRock = *rockIt;
-      if (!bullet.isAlive())
+      Rock* pRock = *rockIt;
+      if (!bullet.isAlive() && !pRock->isAlive())
       {
          // If we had a list of pointers, we would need to delete the memory here...
-         
+         rockIt = pRocks.erase(rockIt);
+         delete pRock;
+         pRock = NULL;
          // remove from list and advance
          bulletIt = bullets.erase(bulletIt);
       }
       else
       {
          bulletIt++; // advance
+         rockIt++;
       }
+      
    }
 }
 
@@ -338,7 +293,10 @@ void Game :: draw(const Interface & ui)
    
    for (int i = 0; i < pRocks.size(); i++)
    {
-      pRocks[i]->draw();
+      if (pRocks[i]->isAlive())
+      {
+         pRocks[i]->draw();
+      }
    }
    
    

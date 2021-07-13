@@ -12,8 +12,8 @@
 #include "velocity.h"
 #include "uiDraw.h"
 #include "uiInteract.h"
-//#include "corecrt_math_defines.h"
-
+#include "corecrt_math_defines.h"
+#include "vector"
 
 class FlyingObject
 {
@@ -33,14 +33,14 @@ public:
    virtual ~FlyingObject() { }
 
    Point getPoint() const { return point; }
+   void setPoint(Point point) { this->point = point;}
    float getRotation() const { return rotation; }
    
    Velocity getVelocity() const { return velocity; }
 
    void setAlive(bool alive) { this->alive = alive; }
    virtual bool isAlive() const { return alive; }
-   
-   void setPoint(const Point & point) { this->point = point; }
+
    void setVelocity(const Velocity & velocity) { this->velocity = velocity ;}
    void kill() { alive = false;}
    void handleBounds();

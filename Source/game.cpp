@@ -6,13 +6,9 @@
  *********************************************************************/
 
 #include "game.h"
-
 // These are needed for the getClosestDistance function...
 #include <limits>
 #include <algorithm>
-using namespace std;
-
-// You may find this function helpful...
 
 /*************************************************************
  * File: game.cpp
@@ -29,11 +25,6 @@ using namespace std;
 #include "game.h"
 #include "flyingObject.h"
 
-using namespace std;
-
-#define OFF_SCREEN_BORDER_AMOUNT 5
-
-
 /***************************************
  * GAME CONSTRUCTOR
  ***************************************/
@@ -43,7 +34,7 @@ Game :: Game(Point tl, Point br)
    // Set up the initial conditions of the game
    // TODO: Set your bird pointer to a good initial value (e.g., NULL)
    //bird = NULL
-   for (int i = 0; i < 4; i++)
+   for (int i = 0; i < 5; i++)
    {
       pRocks.push_back(new BigRock());
    }
@@ -56,6 +47,20 @@ Game :: ~Game()
 {
    // TODO: Check to see if there is currently any rocks or bullets? allocated
    //       and if so, delete it.
+   for (int i = 0; i < bullets.size(); i++)
+   {
+      if (bullets[i].isAlive())
+      {
+         delete &bullets[i];
+      }
+   }
+   for (int i = 0; i < pRocks.size(); i++)
+   {
+      if (pRocks[i]->isAlive())
+      {
+         delete &pRocks[i];
+      }
+   }
 }
 
 /***************************************
@@ -64,22 +69,29 @@ Game :: ~Game()
  ***************************************/
 void Game :: advance()
 {
+   // advance the objects
+   {
    advanceBullets();
    advanceRocks();
    advanceShip();
-
+   }
+   // handle collisions and deleting objects
+   {
    handleCollisions();
    cleanUpZombies();
+   }
 }
-
-/***************************************
- * GAME :: ADVANCE BULLETS
- * Go through each bullet and advance it.
- ***************************************/
+/**************************************************************************
+ * GAME :: ADVANCE ROCKS
+ * 1. For loop to go through the bullets till it hits the end of the vector.
+ * 2. Check if the bullets are alive.
+ * 3. Advance them if they're alive.
+ * 4. handleBounds() to handle if the bullet goes off the screen.
+ **************************************************************************/
 void Game :: advanceBullets()
 {
    
-   // Move each of the bullets forward if it is alive
+   // move each of the bullets forward if it is alive
    for (int i = 0; i < bullets.size(); i++)
    {
       if (bullets[i].isAlive())
@@ -90,13 +102,16 @@ void Game :: advanceBullets()
          // pushes the bullet to the other side of the screen
          bullets[i].handleBounds();
       }
-   }
+   } // for loop
 }
 
-/***************************************
+/**************************************************************************
  * GAME :: ADVANCE ROCKS
- * Go through each bullet and advance it.
- ***************************************/
+ * 1. For loop to go through the rocks till it hits the end of the vector.
+ * 2. Check if the rocks are alive.
+ * 3. Advance them if they're alive.
+ * 4. handleBounds() to handle if the rock goes off the screen.
+ **************************************************************************/
 void Game :: advanceRocks()
 {
    // Move each of the rocks forward if it is alive
@@ -109,44 +124,38 @@ void Game :: advanceRocks()
          // pushes the rock to the other side of the screen
          pRocks[i]->handleBounds();
       }
-   }
+   } // for loop
 }
 
 /**************************************************************************
  * GAME :: ADVANCE SHIP
- *
- * 1. If there is no bird, create one with some probability
- * 2. If there is a bird, and it's alive, advance it
- * 3. Check if the bird has gone of the screen, and if so, "kill" it
+ * 1. If the ship is alive, then advance it.
+ * 2. HandleBounds() to handle if the ship goes off the screen.
  **************************************************************************/
 void Game :: advanceShip()
 {
+   // we have a ship, make sure it's alive
+   if (ship.isAlive())
    {
-      // we have a ship, make sure it's alive
-      if (ship.isAlive())
-      {
-         // move it forward
-         ship.advance();
-         // Lets ship "scroll" on the screen
-         ship.handleBounds();
-      }
+      // move it forward
+      ship.advance();
+      // Lets ship "scroll" on the screen
+      ship.handleBounds();
    }
 }
-
 
 /**********************************************************
  * Function: getClosestDistance
  * Description: Determine how close these two objects will
  *   get in between the frames.
  **********************************************************/
-
 float Game::getClosestDistance(const FlyingObject& obj1, const FlyingObject& obj2) const
 {
    // find the maximum distance traveled
-   float dMax = max(abs(obj1.getVelocity().getDx()), abs(obj1.getVelocity().getDy()));
-   dMax = max(dMax, abs(obj2.getVelocity().getDx()));
-   dMax = max(dMax, abs(obj2.getVelocity().getDy()));
-   dMax = max(dMax, 0.1f); // when dx and dy are 0.0. Go through the loop once.
+   float dMax = std::max(abs(obj1.getVelocity().getDx()), abs(obj1.getVelocity().getDy()));
+   dMax = std::max(dMax, abs(obj2.getVelocity().getDx()));
+   dMax = std::max(dMax, abs(obj2.getVelocity().getDy()));
+   dMax = std::max(dMax, 0.1f); // when dx and dy are 0.0. Go through the loop once.
 
    float distMin = std::numeric_limits<float>::max();
    for (float i = 0.0; i <= dMax; i++)
@@ -161,9 +170,8 @@ float Game::getClosestDistance(const FlyingObject& obj1, const FlyingObject& obj
 
       float distSquared = (xDiff * xDiff) + (yDiff * yDiff);
 
-      distMin = min(distMin, distSquared);
+      distMin = std::min(distMin, distSquared);
    }
-
    return sqrt(distMin);
 }
 
@@ -173,14 +181,19 @@ float Game::getClosestDistance(const FlyingObject& obj1, const FlyingObject& obj
  **************************************************************************/
 void Game :: handleCollisions()
 {
+   for (int k = 0; k < pRocks.size(); k++)
+   {
+      if (getClosestDistance(ship, *pRocks[k]) <= 10)
+      {
+         ship.kill();
+      } // if ship "hits" pRocks
+   }// for PRocks
    // now check for a hit (if it is close enough to any live bullets)
    for (int i = 0; i < bullets.size(); i++)
    {
       if (bullets[i].isAlive())
       {
          // this bullet is alive, see if its too close
-
-         //check if the rock is at this point (in case it was hit)
          for (int j = 0; j < pRocks.size(); j++)
          {
             if (pRocks[j]->isAlive())
@@ -188,51 +201,48 @@ void Game :: handleCollisions()
                if (getClosestDistance(bullets[i], *pRocks[j]) <= pRocks[j]->getCollisionSize())
                {
                   pRocks[j]->breakApart(pRocks);
-
                   pRocks[j]->kill();
-                  
                   bullets[i].kill();
-                  
-               }
-            }
-         }
+               } // if bullets "hits" pRocks
+            }// if pRocks is Alive
+         } // for pRocks
       } // if bullet is alive
    } // for bullets
 }
 
 /**************************************************************************
  * GAME :: CLEAN UP ZOMBIES
- * Remove any dead objects (take bullets out of the list, deallocate bird)
+ * Remove any dead objects (take bullets out of the list, erase and delete any rocks)
  **************************************************************************/
-
 void Game :: cleanUpZombies()
 {
    // Look for dead bullets and dead rocks.
-   vector<Bullet>::iterator bulletIt = bullets.begin();
-   vector<Rock*>::iterator rockIt = pRocks.begin();
+   // Create iterators for the vector
+   std::vector<Bullet>::iterator bulletIt = bullets.begin();
+   std::vector<Rock*>::iterator rockIt = pRocks.begin();
    while ((bulletIt != bullets.end()) && (rockIt != pRocks.end()))
    {
+      // declaring pointers to the iterators
       Bullet bullet = *bulletIt;
-      // Asteroids Hint:
-      // If we had a list of pointers, we would need this line instead:
-      //Bullet* pBullet = *bulletIt;
       Rock* pRock = *rockIt;
+      // if at the position of the object is not alive, then we will delete them
+      // otherwise we will continue through the iterator at the else statement
       if (!bullet.isAlive() && !pRock->isAlive())
       {
-         // If we had a list of pointers, we would need to delete the memory here...
+         // erasing the rock at the rockIt iterator, if the rock is not alive
          rockIt = pRocks.erase(rockIt);
          delete pRock;
          pRock = NULL;
-         // remove from list and advance
+         // remove from list or advance
          bulletIt = bullets.erase(bulletIt);
       }
+      // the else statement as mentioned above, it will allow to continue through the iterator
       else
       {
          bulletIt++; // advance
          rockIt++;
-      }
-      
-   }
+      } // else statement
+   } // while the the bullet or rock doesn't equal the end of their respective vectors
 }
 
 /***************************************
@@ -244,40 +254,39 @@ void Game :: handleInput(const Interface & ui)
    // Change the direction of the rifle
    if (ship.isAlive())
    {
+      // Rotate ship left
+      if (ui.isLeft())
+      {
+         ship.rotateLeft();
+      }
       
-   // Rotate ship left
-   if (ui.isLeft())
-   {
-      ship.rotateLeft();
-   }
-      
-   // Rotates ship right
-   if (ui.isRight())
-   {
-      ship.rotateRight();
-   }
+      // Rotates ship right
+      if (ui.isRight())
+      {
+         ship.rotateRight();
+      }
    
-   // Moves the ship and turns on the ships flames
-   if (ui.isUp())
-   {
-      ship.applyThrustUp();
-      ship.setThrust(true);
-   }
+      // Moves the ship and turns on the ships flames
+      if (ui.isUp())
+      {
+         ship.applyThrustUp();
+         ship.setThrust(true);
+      }
       
-   // Sets the ships thruster flames off if not being used
-   if (!ui.isUp())
-   {
-      ship.setThrust(false);
-   }
+      // Sets the ships thruster flames off if not being used
+      if (!ui.isUp())
+      {
+         ship.setThrust(false);
+      }
    
-   // Check for "Spacebar
-   if (ui.isSpace())
-   {
-      Bullet newBullet;
-      newBullet.fire(ship.getPoint(), ship.getRotation(), ship.getVelocity());
-      bullets.push_back(newBullet);
-   }
-   }
+      // Check for "Spacebar"
+      if (ui.isSpace())
+      {
+         Bullet newBullet;
+         newBullet.fire(ship.getPoint(), ship.getRotation(), ship.getVelocity());
+         bullets.push_back(newBullet);
+      }
+   } // if ship is alive
 }
 
 /*********************************************
@@ -286,11 +295,12 @@ void Game :: handleInput(const Interface & ui)
  *********************************************/
 void Game :: draw(const Interface & ui)
 {
-   
-   
    // draw the ship
-   ship.draw();
+   {
+      ship.draw();
+   }
    
+   // draw the rocks, if they are alive
    for (int i = 0; i < pRocks.size(); i++)
    {
       if (pRocks[i]->isAlive())
@@ -298,7 +308,6 @@ void Game :: draw(const Interface & ui)
          pRocks[i]->draw();
       }
    }
-   
    
    // draw the bullets, if they are alive
    for (int i = 0; i < bullets.size(); i++)
@@ -308,6 +317,7 @@ void Game :: draw(const Interface & ui)
          bullets[i].draw();
       }
    }
+   
    /*
    // Put the score on the screen
    Point scoreLocation;
@@ -352,7 +362,6 @@ void Game :: draw(const Interface & ui)
    textHighScore.setY(186);
    drawText(textHighScore,"High Score:");
    */
-
 }
 
 

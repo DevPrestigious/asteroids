@@ -22,13 +22,11 @@ class Rock : public FlyingObject
 protected:
    int randomNum = random(-200,200);
    float collisionSize = 0;
-   int rockTypeCount = 0;
 
 public:
    bool isAlive() { return alive; }
    float getCollisionSize() { return collisionSize; }
    virtual void breakApart(std::vector<Rock*>& pRocks) {};
-
 };
 
 class BigRock : public Rock
@@ -45,7 +43,6 @@ public:
    void draw();
    void advance();
    void breakApart(std::vector<Rock*>& pRocks);
-   float getCollisionSize() { return collisionSize; }
 };
 
 class MediumRock : public Rock
@@ -53,17 +50,16 @@ class MediumRock : public Rock
 protected:
    
 public:
-   MediumRock()
+   MediumRock(Point point)
    {
-      point = Point(randomNum, randomNum);
+      this->point = point;
       alive = true;
       collisionSize = MEDIUM_ROCK_SIZE;
    }
+   
    void draw();
    void advance();
    void breakApart(std::vector<Rock*>& pRocks);
-   float getCollisionSize() { return collisionSize; }
-
 };
 
 class SmallRock : public Rock
@@ -71,18 +67,14 @@ class SmallRock : public Rock
 protected:
    
 public:
-   SmallRock()
+   SmallRock(Point point)
    {
-      point = Point(randomNum, randomNum);
+      this->point = point;
       alive = true;
       collisionSize = SMALL_ROCK_SIZE;
    }
    
    void draw();
    void advance();
-  
-   float getCollisionSize() { return collisionSize; }
-   
 };
-
 #endif /* rocks_h */

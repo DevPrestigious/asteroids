@@ -14,18 +14,13 @@ protected:
    Velocity bulletVelocity;
    int frameCount = 0;
 public:
-  // Bullet()
-  // {
-    //  point = Point(200,-200);
-      //velocity = Velocity();
-      //isAlive();
-      //rotation = 0;
-   //}
-   //finish draw functions using uiRectangle and circle., and advance.
+
    void draw();
    
    void fire(Point point, int rotation, Velocity shipVelocity);
-
+   
+   void bulletKiller();
+   
    void advance();
    
 };

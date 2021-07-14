@@ -12,7 +12,8 @@
 #include "velocity.h"
 #include "uiDraw.h"
 #include "uiInteract.h"
-#include "corecrt_math_defines.h"
+// You need to uncomment this include if you want to work on Windows.
+//#include "corecrt_math_defines.h"
 #include "vector"
 
 class FlyingObject
@@ -24,7 +25,6 @@ protected:
    Velocity velocity;
 
    bool alive;
-   float angle;
    int rotation;
 
 public:

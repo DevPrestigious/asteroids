@@ -39,7 +39,6 @@ public:
    void add(const Velocity & other);
 
    void advancePoint(Point & point);
-   
 };
 
 #endif /* velocity_h */

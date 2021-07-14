@@ -29,13 +29,12 @@
 #include "string.h"
 #include <exception>
 #include <memory>
+#include <vector>
 
 // TODO: include your rocks, ship and bullet
 #include "bullet.h"
 #include "rocks.h"
 #include "ship.h"
-#include <vector>
-
 
 /*****************************************
  * GAME
@@ -70,9 +69,6 @@ public:
     * Description: draws everything for the game.
     *********************************************/
    void draw(const Interface & ui);
-
-   float getClosestDistance(const FlyingObject& obj1, const FlyingObject& obj2) const; 
-   
    
 protected:
    // The coordinates of the screen
@@ -80,19 +76,44 @@ protected:
    Point bottomRight;
    Ship ship;
    
+   // Declare a vector of bullets
    std::vector<Bullet> bullets;
-     
+   
+   // Declare a vector of pointers (pRocks) to Rock
    std::vector<Rock*> pRocks;
 
    /*************************************************
     * Private methods to help with the game logic.
     *************************************************/
 
+   /*********************************************
+    * Function: advance*()
+    * Description: Allows objects advance functions to be called
+    * if they meet certain criteria!
+    *********************************************/
    void advanceBullets();
    void advanceRocks();
    void advanceShip();
    
+   /*********************************************
+    * Function: getClosestDistance
+    * Description: Returns the closest distance of any two objects.
+    *********************************************/
+   float getClosestDistance(const FlyingObject& obj1, const FlyingObject& obj2) const;
+   
+   /*********************************************
+    * Function: handleCollisions()
+    * Description: calls functions based on a collision, or when any two objects get too close
+    * to eachother acording to rules.
+    *********************************************/
    void handleCollisions();
+   
+   /*********************************************
+    * Function: cleanUpZombies
+    * Description: Erases and deletes objects out of vectors
+    * acording to if they are alive or not. Useful for cleaning up memory.
+    * DoN't Be A sLoB!
+    *********************************************/
    void cleanUpZombies();
    
 };

@@ -14,13 +14,16 @@
 #include "flyingObject.h"
 // Put your Ship class here
 
+/**************************************************************************
+ * Ship:FlyingObject
+ * Inherited from FlyingObject
+ **************************************************************************/
 class Ship : public FlyingObject
 {
-   
 private:
    bool thrust;
-   
 public:
+   // Default constructor
    Ship()
    {
       Point(0,0);
@@ -29,23 +32,11 @@ public:
       rotation = 0;
    }
    
-   Point getPoint() const { return point; }
-   Velocity getVelocity() const { return velocity; }
-   Point getPointX() { return point.getX(); }
-   
-   bool isAlive()
-   {
-      return FlyingObject::isAlive();
-   };
-   
    void setThrust(bool thrust) {this->thrust = thrust; }
-   bool isThrust() const { return thrust; }
    
-   void setAlive(bool alive) { this->alive = alive; }
-   
+   // More detail can be found in the .cpp file
    void applyThrustUp();
-   
-   int posRotation();
+   void applyThrustDown();
 
    void advance();
    

@@ -16,6 +16,20 @@ void Ship :: applyThrustUp()
 }
 
 /**************************************************************************
+ * Ship :: applyThrustUp()
+ * Applys velocity whenever called, in the correct direction, with the correct amount
+ * by THRUST_AMOUNT.
+ * The math behind this would look like point += point.
+ * Essentially it's constantly increasing in "speed" by applying velocity.
+ * DoEs tHaT mAkE sEnSe?
+ **************************************************************************/
+void Ship :: applyThrustDown()
+{
+   velocity.setDy(velocity.getDy() + (THRUST_AMOUNT * (-cos(M_PI / 180.0 * rotation))));
+   velocity.setDx(velocity.getDx() + (THRUST_AMOUNT * (sin(M_PI / 180.0 * rotation))));
+}
+
+/**************************************************************************
  * Ship :: advance()
  * esentially has point continue to update it's position, but doesn't add.
  * the math behind this would look like point + point, it's just continue it's direction
@@ -28,15 +42,12 @@ void Ship :: advance()
 
 /**************************************************************************
  * Ship::draw()
- * If ship is alive, then drawShip, with the point required, the rotation, and possibly with thrust
+ * drawShip, with the point required, the rotation, and possibly with thrust
  * Thrust will get turned on or off in game.cpp with uiInteract.
  **************************************************************************/
 void Ship::draw() const
 {
-   if (FlyingObject::isAlive())
-   {
-      drawShip(point, rotation, thrust);
-   }
+   drawShip(point, rotation, thrust);
 }
 
 /**************************************************************************
@@ -52,7 +63,6 @@ void FlyingObject :: rotateLeft()
       rotation = 0;
    }
    rotation += ROTATE_AMOUNT;
-   
 }
 
 /**************************************************************************

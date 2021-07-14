@@ -2,7 +2,6 @@
  * File: game.cpp
  * Description: Contains the implementaiton of the game class
  *  methods.
- *
  *********************************************************************/
 
 #include "game.h"
@@ -31,9 +30,7 @@
 Game :: Game(Point tl, Point br)
 : topLeft(tl), bottomRight(br)
 {
-   // Set up the initial conditions of the game
-   // TODO: Set your bird pointer to a good initial value (e.g., NULL)
-   //bird = NULL
+   // Creates 5 bigRocks for pRocks the vector.
    for (int i = 0; i < 5; i++)
    {
       pRocks.push_back(new BigRock());
@@ -45,18 +42,18 @@ Game :: Game(Point tl, Point br)
  ****************************************/
 Game :: ~Game()
 {
-   // TODO: Check to see if there is currently any rocks or bullets? allocated
-   //       and if so, delete it.
+   // If the bullets are not alive, we will delete them.
    for (int i = 0; i < bullets.size(); i++)
    {
-      if (bullets[i].isAlive())
+      if (!bullets[i].isAlive())
       {
          delete &bullets[i];
       }
    }
+   // If the pRocks are not alive, we will delete them.
    for (int i = 0; i < pRocks.size(); i++)
    {
-      if (pRocks[i]->isAlive())
+      if (!pRocks[i]->isAlive())
       {
          delete &pRocks[i];
       }
@@ -81,6 +78,7 @@ void Game :: advance()
    cleanUpZombies();
    }
 }
+
 /**************************************************************************
  * GAME :: ADVANCE ROCKS
  * 1. For loop to go through the bullets till it hits the end of the vector.
@@ -91,15 +89,18 @@ void Game :: advance()
 void Game :: advanceBullets()
 {
    
-   // move each of the bullets forward if it is alive
+   // Move each of the bullets forward if it is alive.
    for (int i = 0; i < bullets.size(); i++)
    {
       if (bullets[i].isAlive())
       {
-         // this bullet is alive, so tell it to move forward
+         // This bullet is alive, so tell it to move forward.
          bullets[i].advance();
          
-         // pushes the bullet to the other side of the screen
+         // Keeps bullet from travelling more than 40 frames.
+         bullets[i].bulletKiller();
+         
+         // Pushes the bullet to the other side of the screen.
          bullets[i].handleBounds();
       }
    } // for loop
@@ -119,9 +120,10 @@ void Game :: advanceRocks()
    {
       if (pRocks[i]->isAlive())
       {
-         // this rock is alive, so tell it to move forward
+         // This rock is alive, so tell it to move forward.
          pRocks[i]->advance();
-         // pushes the rock to the other side of the screen
+         
+         // Pushes the rock to the other side of the screen.
          pRocks[i]->handleBounds();
       }
    } // for loop
@@ -137,9 +139,9 @@ void Game :: advanceShip()
    // we have a ship, make sure it's alive
    if (ship.isAlive())
    {
-      // move it forward
+      // Move it forward.
       ship.advance();
-      // Lets ship "scroll" on the screen
+      // Lets ship "scroll" on the screen.
       ship.handleBounds();
    }
 }
@@ -200,6 +202,7 @@ void Game :: handleCollisions()
             {
                if (getClosestDistance(bullets[i], *pRocks[j]) <= pRocks[j]->getCollisionSize())
                {
+                  // Kills bullets and rocks, breaks apart rocks.
                   pRocks[j]->breakApart(pRocks);
                   pRocks[j]->kill();
                   bullets[i].kill();
@@ -273,8 +276,15 @@ void Game :: handleInput(const Interface & ui)
          ship.setThrust(true);
       }
       
+      // Moves the ship back and turns on the ships flames
+      if (ui.isDown())
+      {
+         ship.applyThrustDown();
+         ship.setThrust(true);
+      }
+      
       // Sets the ships thruster flames off if not being used
-      if (!ui.isUp())
+      if (!ui.isUp() && !ui.isDown())
       {
          ship.setThrust(false);
       }
@@ -287,6 +297,15 @@ void Game :: handleInput(const Interface & ui)
          bullets.push_back(newBullet);
       }
    } // if ship is alive
+   
+   // function to allow for respawning of the ship
+   else if  (!ship.isAlive())
+   {
+      if (ui.isSpace())
+      {
+         ship.setAlive(true);
+      }
+   }
 }
 
 /*********************************************
@@ -295,9 +314,20 @@ void Game :: handleInput(const Interface & ui)
  *********************************************/
 void Game :: draw(const Interface & ui)
 {
-   // draw the ship
+   // draw the ship if the ship is alive, otherwise
+   // draw text to the screen to instruct for respawn
+   // and set point and velocity to 0
    {
-      ship.draw();
+      if (ship.isAlive())
+      {
+         ship.draw();
+      }
+      else if (!ship.isAlive())
+      {
+      drawText(Point(0,0), "Space to respawn.");
+      ship.setPoint(Point(0,0));
+      ship.setVelocity(Velocity(0, 0));
+      }
    }
    
    // draw the rocks, if they are alive
@@ -317,51 +347,6 @@ void Game :: draw(const Interface & ui)
          bullets[i].draw();
       }
    }
-   
-   /*
-   // Put the score on the screen
-   Point scoreLocation;
-   scoreLocation.setX(topLeft.getX() + 5);
-   scoreLocation.setY(topLeft.getY() - 5);
-   drawNumber(scoreLocation, score);
-   
-   // Puts the old or current highscore on the screen
-   Point highScoreLocation;
-   highScoreLocation.setX(175);
-   highScoreLocation.setY(194);
-   drawNumber(highScoreLocation, highscore);
-   
-   // Puts the amount of remaining birds on the top middle
-   Point BirdsRemaining;
-   BirdsRemaining.setX(-5);
-   BirdsRemaining.setY(194);
-   drawNumber(BirdsRemaining, birdAmount);
-   
-   Point textBirds;
-   textBirds.setX(-105);
-   textBirds.setY(186);
-   drawText(textBirds,"Birds Remaining:");
-   
-   Point textScore;
-   // Adjust the headers if there is a longer number to draw.
-   if (score > 9 || score < 0)
-   {
-      textScore.setX(topLeft.getX() + 35);
-      textScore.setY(topLeft.getY() - 14);
-   }
-   else
-   {
-      textScore.setX(topLeft.getX() + 20);
-      textScore.setY(topLeft.getY() - 14);
-   }
-
-   drawText(textScore,":Score");
-   
-   Point textHighScore;
-   textHighScore.setX(100);
-   textHighScore.setY(186);
-   drawText(textHighScore,"High Score:");
-   */
 }
 
 

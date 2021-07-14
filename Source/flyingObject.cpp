@@ -1,6 +1,6 @@
 //
 //  flyingObject.cpp
-//  skeetSkeet
+//  asteroids
 //
 //  Created by Alexander Dohms on 6/14/21.
 //

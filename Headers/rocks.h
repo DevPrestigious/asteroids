@@ -17,22 +17,31 @@
 //   MediumRock
 //   SmallRock
 
+/**************************************************************************
+ * Rock::public FlyingObject
+ * Inherits some functions from flyingObject, then it adds some functions
+ * that are shared among the other rocks.
+ **************************************************************************/
 class Rock : public FlyingObject
 {
 protected:
-   int randomNum = random(-200,200);
+   int randomNum = random(-20000,20000);
    float collisionSize = 0;
 
 public:
    bool isAlive() { return alive; }
    float getCollisionSize() { return collisionSize; }
+   // Passes the vector of pRocks and uses tht to add more
+   // rocks to the vector.
    virtual void breakApart(std::vector<Rock*>& pRocks) {};
 };
 
+/**************************************************************************
+ * BigRock: Rock
+ * BigRock inherited from Rock
+ **************************************************************************/
 class BigRock : public Rock
 {
-protected:
-   
 public:
    BigRock()
    {
@@ -45,10 +54,12 @@ public:
    void breakApart(std::vector<Rock*>& pRocks);
 };
 
+/**************************************************************************
+ * MediumRock:Rock
+ * MediumRock inherited from Rock
+ **************************************************************************/
 class MediumRock : public Rock
 {
-protected:
-   
 public:
    MediumRock(Point point)
    {
@@ -62,10 +73,12 @@ public:
    void breakApart(std::vector<Rock*>& pRocks);
 };
 
+/**************************************************************************
+ * SmallRock:Rock
+ * SmallRock inherited from Rock
+ **************************************************************************/
 class SmallRock : public Rock
 {
-protected:
-   
 public:
    SmallRock(Point point)
    {
